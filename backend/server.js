@@ -1,6 +1,7 @@
 const express = require('express');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const app = express()
@@ -16,6 +17,36 @@ const db = mysql.createConnection( {
 app.get('/', (req, res) => {
     return res.json("From backend");
 })
+
+app.get('/users', (req, res) => {
+    const sql = "SELECT * FROM users"
+    db.query(sql, (err, results, fields) => {
+        if(err) {
+            console.error('Query error:', err);
+            db.end();
+            return;
+        }
+        else
+            return res.json(results);
+    })
+})
+
+
+app.post('/addUser', (req, res) => {
+    const { username, email, password } = req.body;
+  
+    const query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
+  
+    db.query(query, [username, email, password], (err, results) => {
+      if (err) {
+        console.error('Error inserting user into the database:', err.stack);
+        res.status(500).send('Error adding user');
+        return;
+      }
+      res.status(200).send('User added successfully');
+    });
+  });
+  
 
 const PORT = process.env.PORT;
 
