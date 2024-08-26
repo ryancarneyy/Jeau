@@ -4,19 +4,20 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 
-const app = express()
-app.use(cors())
+const app = express();
+app.use(express.json());
+app.use(cors());
 
 const db = mysql.createConnection( {
     host: 'localhost',
     user: 'root',
     password: process.env.MYSQL_PASS,
     database: 'scoretalk'
-})
+});
 
 app.get('/', (req, res) => {
     return res.json("From backend");
-})
+});
 
 app.get('/users', (req, res) => {
     const sql = "SELECT * FROM users"
@@ -29,23 +30,24 @@ app.get('/users', (req, res) => {
         else
             return res.json(results);
     })
-})
+});
 
 
 app.post('/addUser', (req, res) => {
+    console.log( req.body );
     const { username, email, password } = req.body;
-  
+
     const query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
-  
+
     db.query(query, [username, email, password], (err, results) => {
-      if (err) {
+        if (err) {
         console.error('Error inserting user into the database:', err.stack);
-        res.status(500).send('Error adding user');
+        res.status(500).json( {message: 'Error adding user'} );
         return;
-      }
-      res.status(200).send('User added successfully');
+        }
+        res.status(200).json({ message: 'User added succesfully', id: results.insertId });
     });
-  });
+});
   
 
 const PORT = process.env.PORT;
