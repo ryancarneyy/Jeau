@@ -34,6 +34,7 @@ app.get('/users', (req, res) => {
 
 
 app.post('/addUser', (req, res) => {
+    console.log( 'User received:')
     console.log( req.body );
     const { username, email, password, first_name, last_name, phone_number, date_of_birth } = req.body;
 

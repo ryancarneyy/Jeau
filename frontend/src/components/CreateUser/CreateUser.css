@@ -1,0 +1,13 @@
+/* Password matching classes */
+.password-match-text {
+    color: green;
+}
+.password-not-match-text {
+    color:red
+}
+
+
+.sign-up-text {
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
