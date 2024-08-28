@@ -4,9 +4,13 @@ import './App.css';
 const App = () => {
   const [data, setData] = useState([])
   const [newUser, setNewUser] = useState({
+    first_name: '',
+    last_name: '',
     username: '',
     email: '',
-    password: ''
+    phone_number: '',
+    password: '',
+    date_of_birth: ''
   });
   const [passwordMatch, setPasswordMatch] = useState(false);
 
@@ -35,7 +39,7 @@ const App = () => {
   // handles verifying correct password 
   const handleRepeatPassword = (event) => {
     const { name, value } = event.target;
-    if (value == newUser.password) {
+    if (value === newUser.password) {
       // Implement verification consequence here
       setPasswordMatch(true);
     }
@@ -44,26 +48,40 @@ const App = () => {
     }
   }
 
+  const passwordMatchText = () => {
+    return passwordMatch ? <p className='sign-up-text password-match-text' >Passwords match!</p> : <p className='sign-up-text password-not-match-text'>Passwords do not match.</p>;
+  }
+
   // Create new user button
   const handleSubmit = (event) => {
+    // keeps form data from being wiped
     event.preventDefault();
-    console.log('Form submitted with data', newUser)
-    fetch('http://localhost:8000/addUser', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(newUser)
-    })
-    .then(res => {
-      if (!res.ok) {
-        throw new Error(`Error adding user: ${res.status}`);
-      }
-      return res.json();
-    })
-    .then(data => {
-      console.log(data.message);
-    })
+    if (passwordMatch) {
+      console.log('Form submitted with data', newUser)
+      fetch('http://localhost:8000/addUser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newUser)
+      })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error(`Error adding user: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then(data => {
+        console.log(data.message);
+        window.location.reload()
+      })
+      .catch( err => {
+        console.error('Error with fetch operation:', err);
+      })
+    }
+    else {
+      alert('Passwords do not match.')
+    }
   }
 
   return (
@@ -74,6 +92,7 @@ const App = () => {
           <label>First Name: </label>
             <input 
               type='text'
+              
               name='first_name'
               onChange={handleChange}>
             </input>
@@ -107,15 +126,18 @@ const App = () => {
             <input 
               type='text'
               name='repeat_password'
-              onChange={handleChange}>
+              onChange={handleRepeatPassword}>
             </input>
+        </div>
+        <div>
+            {passwordMatchText()}
         </div>
         <div>
           <label>Date of Birth: </label>
             <input 
-              type='text'
+              type='date'
               name='date_of_birth'
-              onChange={handleRepeatPassword}>
+              onChange={handleChange}>
             </input>
         </div>
         <div>
@@ -140,9 +162,18 @@ const App = () => {
 
       <br></br>
       <h2>Existing Users</h2>
-      <ul>
+      <ul> 
         {data.map((user, id) => (
-          <li key={id}>ID: {user.id} | Username: {user.username} | Email: {user.email} | Password: {user.password}</li>
+          <>
+            <li key={id}> <span style={{fontWeight: 'bold'}}>{user.first_name} {user.last_name} </span> </li>
+            <ul>
+              <li key={id + 'username'}>&nbsp;&nbsp;&nbsp;<span style={{fontWeight: 'bold'}}>Username: </span> {user.username} </li>
+              <li key={id + 'email'}>&nbsp;&nbsp;&nbsp;<span style={{fontWeight: 'bold'}}>Email: </span>{user.email}</li>
+              <li key={id + 'phone_number'}>&nbsp;&nbsp;&nbsp;<span style={{fontWeight: 'bold'}}>Phone Number: </span> {user.phone_number} </li>
+              <li key={id + 'date_of_birth'}>&nbsp;&nbsp;&nbsp;<span style={{fontWeight: 'bold'}}>Date of Birth: </span>{user.date_of_birth}</li>
+              <li key={id + 'password'}>&nbsp;&nbsp;&nbsp;<span style={{fontWeight: 'bold'}}>Password: </span> {user.password} </li>
+            </ul>
+          </>
         ))}
       </ul>
     </div>

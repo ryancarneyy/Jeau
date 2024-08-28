@@ -35,11 +35,11 @@ app.get('/users', (req, res) => {
 
 app.post('/addUser', (req, res) => {
     console.log( req.body );
-    const { username, email, password } = req.body;
+    const { username, email, password, first_name, last_name, phone_number, date_of_birth } = req.body;
 
-    const query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
+    const query = 'INSERT INTO users (username, email, password, first_name, last_name, phone_number, date_of_birth) VALUES (?, ?, ?, ?, ?, ?, ?)';
 
-    db.query(query, [username, email, password], (err, results) => {
+    db.query(query, [username, email, password, first_name, last_name, phone_number, date_of_birth], (err, results) => {
         if (err) {
         console.error('Error inserting user into the database:', err.stack);
         res.status(500).json( {message: 'Error adding user'} );
