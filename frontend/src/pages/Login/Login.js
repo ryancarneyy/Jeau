@@ -11,6 +11,7 @@ const Login = () => {
         password: '' 
     });
 
+    // Updates loginInfo useState every keystroke
     const handleInputChange = (event) => {
         const { name, value } = event.target;
         setLoginInfo({
@@ -19,11 +20,12 @@ const Login = () => {
         });
     }
 
+    // handles when login button is pressed
     const handleSubmit = (event) => {
          // keeps form data from being wiped
         event.preventDefault();
         console.log('Login Attempt with info: ', loginInfo)
-        fetch('http://localhost:8000/loginVerification', {
+        fetch('http://localhost:8000/users/login', {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json'
@@ -31,6 +33,7 @@ const Login = () => {
             body: JSON.stringify(loginInfo)
         })
         .then(res => {
+            // response status in 200-299
             if (!res.ok) {
                 throw new Error(`Error authenticating user: ${res.status}`);
             }

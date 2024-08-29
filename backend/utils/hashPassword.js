@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 
+// generic function for hashing password using bcrypt
 async function hashPassword(password) {
     const saltRounds = 10;
     try {

@@ -39,13 +39,13 @@ const CreateUser = () => {
     return passwordMatch ? <p className='sign-up-text password-match-text' >Passwords match!</p> : <p className='sign-up-text password-not-match-text'>Passwords do not match.</p>;
   }
 
-  // Create new user button
+  // hadnles when Create new user button is pressed 
   const handleSubmit = (event) => {
     // keeps form data from being wiped
     event.preventDefault();
     if (passwordMatch) {
       console.log('Form submitted with data', newUser)
-      fetch('http://localhost:8000/addUser', {
+      fetch('http://localhost:8000/users/signUp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -75,6 +75,7 @@ const CreateUser = () => {
 
 
 
+  // Inputs needed to make new user
   const inputs = [
       { label: 'First Name: ', type: 'text', name: 'first_name'},
       { label: 'Last Name: ', type: 'text', name: 'last_name'},
@@ -95,7 +96,6 @@ const CreateUser = () => {
                 <input 
                   type={input.type}
                   name={input.name}
-                  // onChange={input.name === 'password' || input.name === 'confirm_password' ? handleConfirmPassword : handleChange}
                   onChange = {handleInputChange}
                   >
                 </input>
