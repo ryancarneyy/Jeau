@@ -1,15 +1,20 @@
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Login from './pages/Login/Login'
 import './App.css';
-import './components/CreateUser/CreateUser.js'
-import CreateUser from './components/CreateUser/CreateUser.js';
-import FetchUsers from './components/FetchUsers/FetchUsers.js'
+import CreateUser from './pages/CreateUser/CreateUser';
+import Home from './pages/Home/Home';
+
 
 const App = () => {
   return (
-    <div className="App">
-      <CreateUser></CreateUser>
-      <br></br>
-      <FetchUsers></FetchUsers>
-    </div>
+    <Router>
+      <Routes>
+        <Route path='/account' element={<CreateUser />}></Route>
+        <Route path='/' element={<Login/>}></Route>
+        <Route path='/home' element={<Home/>}></Route>
+      </Routes>
+    </Router>
   );
 }
 

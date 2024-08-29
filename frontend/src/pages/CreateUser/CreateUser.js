@@ -1,5 +1,7 @@
 import { useState } from "react";
 import './CreateUser.css'
+import { Link, useNavigate } from "react-router-dom";
+
 
 const CreateUser = () => {
   // Information for new user to get passed to server
@@ -14,6 +16,7 @@ const CreateUser = () => {
     date_of_birth: ''
   });
   const [passwordMatch, setPasswordMatch] = useState(false);
+  const navigate = useNavigate();
 
 
   // update new user useState
@@ -29,7 +32,6 @@ const CreateUser = () => {
       ...newUser,
       [ name ]: value
     });
-    console.log(newUser);
   }
 
   // Sets the text for if the passwords match or not
@@ -59,7 +61,7 @@ const CreateUser = () => {
       .then(data => {
         console.log(data.message);
         alert('User succesfully created!');
-        window.location.reload();
+        navigate('/home');
       })
       .catch( err => {
         console.error('Error with fetch operation:', err);
