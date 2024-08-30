@@ -13,7 +13,8 @@ const CreateUser = () => {
     phone_number: '',
     password: '',
     confirm_password: '',
-    date_of_birth: ''
+    date_of_birth: '',
+    role: 'user'
   });
   const [passwordMatch, setPasswordMatch] = useState(false);
   const navigate = useNavigate();

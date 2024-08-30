@@ -40,7 +40,7 @@ const Login = () => {
             return res.json();
         })
         .then(data => {
-            console.log(data.message);
+            console.log(data);
             navigate('/home');
         })
         .catch( err => {

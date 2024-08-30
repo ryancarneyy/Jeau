@@ -1,20 +1,22 @@
 // Controller functions for user functionality
 const bcrypt = require('bcrypt');
 const hashPassword = require('../utils/hashPassword');
+const jwt = require('jsonwebtoken');
 const db = require('../db/db');
+require('dotenv').config();
 
 // controller function for user signing up
 // req.body is passed in as user, contains all fields for creating new user for db
 async function addUser( user ) {
     try {
         console.log(user);
-        const { username, email, password, first_name, last_name, phone_number, date_of_birth } = user;
-        const query = 'INSERT INTO users (username, email, password, first_name, last_name, phone_number, date_of_birth) VALUES (?, ?, ?, ?, ?, ?, ?)';
+        const { username, email, password, first_name, last_name, phone_number, date_of_birth, role} = user;
+        const query = 'INSERT INTO users (username, email, password, first_name, last_name, phone_number, date_of_birth, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
         const hashedPassword = await hashPassword(password);
 
         // Promise is used to return a value from addUser
         return new Promise((resolve, reject) => {
-            db.query(query, [username, email, hashedPassword, first_name, last_name, phone_number, date_of_birth], (err, results) => {
+            db.query(query, [username, email, hashedPassword, first_name, last_name, phone_number, date_of_birth, role], (err, results) => {
                 if (err) {
                     console.error('Error while adding user', err.message);
                     resolve( { success: false, message: 'Error while adding user' } );
@@ -39,7 +41,7 @@ async function login( user ) {
     try {
         console.log(user);
         const {username, password} = user;
-        const query = 'SELECT password FROM users WHERE username = ?';
+        const query = 'SELECT * FROM users WHERE username = ?';
         
         // return value for login function
         return new Promise((resolve, reject) => {
@@ -55,12 +57,24 @@ async function login( user ) {
                 }
                 
                 // Comparing hashed passwords
-                const hashedDBPassword = results[0].password;
+                const user = results[0];
+                const hashedDBPassword = user.password;
                 try {
                     const passwordMatch = await bcrypt.compare(password, hashedDBPassword);
                     if (passwordMatch) {
                         console.log('Login successful');
-                        resolve( { success: true, status: 200, message: 'Login Successful' } );
+                        
+                        const payload = {
+                            id: user.id,
+                            username: user.username,
+                            email: user.email,
+                            role: user.role,
+                            iat: Math.floor(Date.now() / 1000), // issue time
+                            iss: 'jeau.com',
+                            sub: 'user_authentication' // subject
+                        }
+                        const token = jwt.sign(payload, process.env.JWT_KEY, { expiresIn: '1h' });
+                        resolve( { success: true, status: 200, message: 'Login Successful', token: token } );
                     }
                     else {
                         console.log('Login failed');

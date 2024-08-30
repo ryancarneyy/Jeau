@@ -27,6 +27,7 @@ const FetchUsers = () => {
                     <li>&nbsp;&nbsp;&nbsp;<span style={{fontWeight: 'bold'}}>Phone Number: </span> {user.phone_number} </li>
                     <li>&nbsp;&nbsp;&nbsp;<span style={{fontWeight: 'bold'}}>Date of Birth: </span>{user.date_of_birth}</li>
                     <li>&nbsp;&nbsp;&nbsp;<span style={{fontWeight: 'bold'}}>Password: </span> {user.password} </li>
+                    <li>&nbsp;&nbsp;&nbsp;<span style={{fontWeight: 'bold'}}>Role: </span> {user.role} </li>
                 </ul>
             </>
             ))}
