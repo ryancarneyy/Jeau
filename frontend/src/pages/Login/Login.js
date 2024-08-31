@@ -41,7 +41,10 @@ const Login = () => {
         })
         .then(data => {
             console.log(data);
-            navigate('/home');
+            if (data.token) {
+                console.log('Login successful');
+                navigate('/account');    
+            }
         })
         .catch( err => {
             console.error('Error with fetch operation:', err);
@@ -71,7 +74,7 @@ const Login = () => {
             </form>
             <nav>
                 <ul>
-                    <li><Link to='/account'>Sign Up!</Link></li>
+                    <li><Link to='/signUp'>Sign Up!</Link></li>
                     <li><Link to='/home'>Show users!</Link></li>
                 </ul>
             </nav>
