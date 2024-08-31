@@ -21,29 +21,31 @@ const Login = () => {
     }
 
     // handles when login button is pressed
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
          // keeps form data from being wiped
         event.preventDefault();
         console.log('Login Attempt with info: ', loginInfo)
-        fetch('http://localhost:8000/users/login', {
+        await fetch('http://localhost:8000/users/login', {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json'
             },
-            body: JSON.stringify(loginInfo)
+            body: JSON.stringify(loginInfo),
+            credentials: 'include'
         })
         .then(res => {
             // response status in 200-299
             if (!res.ok) {
                 throw new Error(`Error authenticating user: ${res.status}`);
             }
+            console.log('Response cookies', document.cookie);
             return res.json();
         })
         .then(data => {
             console.log(data);
             if (data.token) {
                 console.log('Login successful');
-                navigate('/account');    
+                navigate(`/profile/${data.username}`);   
             }
         })
         .catch( err => {

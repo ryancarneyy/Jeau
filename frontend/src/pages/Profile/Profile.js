@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react";
+import {  useParams } from "react-router-dom";
 
-const Account = () => {
+const Profile = () => {
     const [user, setUser] = useState({});
+    const  { username } = useParams();
+
+    // FIX MULTI RENDERING PROBLEM TMRW!
 
     useEffect(() => {
-        fetch('http://localhost:8000/users/profile')
+        fetch(`http://localhost:8000/users/profile/${username}`, {
+            method: 'GET',
+            credentials: 'include'
+        })
         .then(res => {
             if (!res.ok) {
                 throw new Error('Error fetching user profile');
@@ -13,15 +20,19 @@ const Account = () => {
         })
         .then(data => {
             setUser(data);
+            console.log(data);
         })
         .catch(err => {
             console.error(err);
         })
-    }, []);
+    }, [username]);
 
     return (
-        <h1>My Account</h1>
+        <div> 
+            <h1>My Account:</h1>
+            <p>Username: {username}</p>
+        </div>
     );
 };
 
-export default Account;
+export default Profile;

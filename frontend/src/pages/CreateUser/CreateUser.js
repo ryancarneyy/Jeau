@@ -66,7 +66,7 @@ const CreateUser = () => {
       })
       .catch( err => {
         console.error('Error with fetch operation:', err);
-        alert('Sign-up form incomplete!')
+        alert('Error while attempting to sign up')
       })
     }
     else {
