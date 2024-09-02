@@ -3,9 +3,11 @@ import {  useParams } from "react-router-dom";
 
 const Profile = () => {
     const [user, setUser] = useState({});
+    const [self, setSelf] = useState(false);
     const  { username } = useParams();
 
-    // FIX MULTI RENDERING PROBLEM TMRW!
+
+    // Multi rendering caused by running App in strictmode (turned off in production)
 
     useEffect(() => {
         fetch(`http://localhost:8000/users/profile/${username}`, {
@@ -19,20 +21,38 @@ const Profile = () => {
             return res.json();
         })
         .then(data => {
-            setUser(data);
-            console.log(data);
+            if(data.self) {
+                setSelf(true);
+                setUser(data.user);
+                console.log(data.user);
+            }
+            else {
+                setSelf(false);
+            }
+
         })
         .catch(err => {
             console.error(err);
         })
     }, [username]);
 
-    return (
-        <div> 
-            <h1>My Account:</h1>
-            <p>Username: {username}</p>
-        </div>
-    );
+    if(self) {
+        return (
+            <div>
+                <h1>My Account:</h1>
+                <p>Username: {user.username}</p>
+                <p>Email: {user.email}</p>
+                <p>Role: {user.role}</p>
+            </div>
+        )
+    }
+    else {
+        return (
+            <div>
+                <h1>Permission Error 401: Unauthorized User</h1>
+            </div>
+        )
+    }
 };
 
 export default Profile;

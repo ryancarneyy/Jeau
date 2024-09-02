@@ -5,10 +5,11 @@ const FetchUsers = () => {
 
     // Fetch users from database 
     useEffect(() => {
-      fetch('http://localhost:8000/users/getUsers')
+      fetch('http://localhost:8000/development/getUsers')
       .then(res => res.json())
       .then(data => {
-        setData(data);
+        console.log(data.users);
+        setData(data.users);
       })
       .catch(err => console.log)
      }, []);
