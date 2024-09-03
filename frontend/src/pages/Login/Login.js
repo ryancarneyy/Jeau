@@ -10,6 +10,7 @@ const Login = () => {
         username: '',
         password: '' 
     });
+    const [incorrectUser, setIncorrectUser] = useState(false)
 
     // Updates loginInfo useState every keystroke
     const handleInputChange = (event) => {
@@ -49,14 +50,16 @@ const Login = () => {
             }
         })
         .catch( err => {
+
             console.error('Error with fetch operation:', err);
-            alert('Error fetching user')
+            setIncorrectUser(true);
+            // alert('Error fetching user')
         })
     }
 
     return (
         <>
-            <h2>Sign in</h2>
+            <h2>Login</h2>
             <form onSubmit={handleSubmit}>
                 <div className="login-input">
                     <label>Username: </label>
@@ -72,6 +75,7 @@ const Login = () => {
                     name='password'
                     onChange={handleInputChange} />
                 </div>
+                {incorrectUser ? <p style={{color: 'red', margin: 0}}>Incorrect username or password</p> : null}
                 <button type='submit'>Login</button>
             </form>
             <nav>
