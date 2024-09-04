@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const db = require('../../db/db');
-const promiseQuery = require('../../utils/promiseQuery')
+const promiseQuery = require('../../utils/promiseQuery');
+const getLoginTimeout = require('./getLoginTimeout')
 require('dotenv').config();
 
 // controller function for user logging in
@@ -12,6 +12,18 @@ async function login(user) {
     try {
         console.log(user);
         const { username, password } = user;
+        const loginTimestampStatus = await getLoginTimeout(username);
+        if(loginTimestampStatus.timeout) {
+            if (loginTimestampStatus.status === 500) {
+                console.log('User Timeout failed, error while fetching user timeout')
+                return({success: false, status: 403, message: 'Error while fetching user timeout'});
+            }
+            else {
+                // console.log('User in timeout');
+                return({sucess: false, status: 403, message: 'User in timeout'});
+            }
+        }
+        // console.log('no login timeout')
         const query = 'SELECT * FROM users WHERE username = ?';
         
         // Query the database

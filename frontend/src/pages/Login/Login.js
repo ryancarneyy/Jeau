@@ -10,7 +10,7 @@ const Login = () => {
         username: '',
         password: '' 
     });
-    const [incorrectUser, setIncorrectUser] = useState(false)
+    const [incorrectUser, setIncorrectUser] = useState(false);
 
     // Updates loginInfo useState every keystroke
     const handleInputChange = (event) => {
