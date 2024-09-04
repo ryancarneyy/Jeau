@@ -1,7 +1,9 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const promiseQuery = require('../../utils/promiseQuery');
-const getLoginTimeout = require('./getLoginTimeout')
+const getLoginTimeout = require('./getLoginTimeout');
+const addLoginAttempt = require('./addLoginAttempt');
+const setLoginAttempts = require('./setLoginAttempts');
 require('dotenv').config();
 
 // controller function for user logging in
@@ -10,7 +12,7 @@ require('dotenv').config();
 
 async function login(user) {
     try {
-        console.log(user);
+        // console.log(user);
         const { username, password } = user;
         const loginTimestampStatus = await getLoginTimeout(username);
         if(loginTimestampStatus.timeout) {
@@ -19,8 +21,8 @@ async function login(user) {
                 return({success: false, status: 403, message: 'Error while fetching user timeout'});
             }
             else {
-                // console.log('User in timeout');
-                return({sucess: false, status: 403, message: 'User in timeout'});
+                console.log('User in timeout');
+                return({success: false, status: 403, message: 'User in timeout'});
             }
         }
         // console.log('no login timeout')
@@ -56,15 +58,18 @@ async function login(user) {
             };
 
             const token = jwt.sign(payload, process.env.JWT_KEY, { expiresIn: '1h' });
+            // resets incorrect login attempts to 0
+            await setLoginAttempts(username, 0);
             return { success: true, status: 200, message: 'Login Successful', username: userRecord.username, token };
         } else {
             console.log('Login failed');
+            await addLoginAttempt(username);
             return { success: false, status: 401, message: 'Authorization Failed' };
         }
     } catch (err) {
         // Error handling
         console.error('Error during login:', err.message);
-        return { success: false, status: 500, message: 'Internal Server Error' };
+        return { success: false, status: 500, message: 'Internal Server Error while calling login' + err.message };
     }
 }
 

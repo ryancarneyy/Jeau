@@ -11,6 +11,7 @@ const Login = () => {
         password: '' 
     });
     const [incorrectUser, setIncorrectUser] = useState(false);
+    const [accountLocked, setAccountLocked] = useState(false);
 
     // Updates loginInfo useState every keystroke
     const handleInputChange = (event) => {
@@ -50,8 +51,12 @@ const Login = () => {
             }
         })
         .catch( err => {
-
             console.error('Error with fetch operation:', err);
+            // 403 if account is locked
+            console.log(err.message);
+            if(err.message === 'Error authenticating user: 403') {
+                setAccountLocked(true);
+            }
             setIncorrectUser(true);
             // alert('Error fetching user')
         })
@@ -76,6 +81,7 @@ const Login = () => {
                     onChange={handleInputChange} />
                 </div>
                 {incorrectUser ? <p style={{color: 'red', margin: 0}}>Incorrect username or password</p> : null}
+                {accountLocked ? <p style={{color: 'red', margin: 0}}>Account Locked</p> : null}
                 <button type='submit'>Login</button>
             </form>
             <nav>

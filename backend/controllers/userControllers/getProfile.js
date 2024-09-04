@@ -3,10 +3,8 @@ const db = require('../../db/db');
 const promiseQuery = require('../../utils/promiseQuery');
 
 
-
+// Fetches user data for the profile page
 async function getProfile(username){
-    // console.log(username);
-    
     try {
         const query = "SELECT username, email, role FROM users where username = ?";
         const results = promiseQuery(query, [username]);
