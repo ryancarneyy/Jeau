@@ -12,6 +12,8 @@ const Login = () => {
     });
     const [incorrectUser, setIncorrectUser] = useState(false);
     const [accountLocked, setAccountLocked] = useState(false);
+    const [accountLockWarning, setAccountLockWarning] = useState(false);
+    const [attemptsLeft, setAttemptsLeft] = useState(10);
 
     // Updates loginInfo useState every keystroke
     const handleInputChange = (event) => {
@@ -26,7 +28,7 @@ const Login = () => {
     const handleSubmit = async (event) => {
          // keeps form data from being wiped
         event.preventDefault();
-        console.log('Login Attempt with info: ', loginInfo)
+        // console.log('Login Attempt with info: ', loginInfo)
         await fetch('http://localhost:8000/users/login', {
             method: 'POST',
             headers: {
@@ -38,59 +40,87 @@ const Login = () => {
         .then(res => {
             // response status in 200-299
             if (!res.ok) {
-                throw new Error(`Error authenticating user: ${res.status}`);
+                if(res.status !== 401) {
+                    throw new Error(`Error authenticating user: ${res.status}`);
+                }
             }
-            console.log('Response cookies', document.cookie);
+            // console.log('Response cookies', document.cookie);
             return res.json();
         })
         .then(data => {
-            console.log(data);
+            if (data.status === 401) {
+                setAttemptsLeft(data.numAttempts);
+                if(attemptsLeft-1 <= 5) {
+                    setAccountLockWarning(true);
+                    if(accountLockWarning && attemptsLeft-1 === 0) {
+                        setAccountLockWarning(false);
+                        setAccountLocked(true);
+                        setIncorrectUser(false);
+                        throw new Error('Error authenticating user, account now locked');
+                    }
+                }
+                else {
+                    setAccountLockWarning(false);
+                }
+                throw new Error(`Error authenticating user: ${data.status}`);
+            }
             if (data.token) {
                 console.log('Login successful');
                 navigate(`/profile/${data.username}`);   
             }
         })
-        .catch( err => {
-            console.error('Error with fetch operation:', err);
+        .catch(err => {
+            // console.error('Error with fetch operation:', err);
             // 403 if account is locked
-            console.log(err.message);
             if(err.message === 'Error authenticating user: 403') {
                 setAccountLocked(true);
+                setIncorrectUser(false);
             }
-            setIncorrectUser(true);
-            // alert('Error fetching user')
+            else if (err.message !== 'Error authenticating user, account now locked') {
+                setAccountLocked(false);
+                setIncorrectUser(true);
+            }
         })
     }
 
     return (
-        <>
-            <h2>Login</h2>
-            <form onSubmit={handleSubmit}>
-                <div className="login-input">
-                    <label>Username: </label>
+        <div className="login-page">
+            <div className="login-div login-header-div">
+                <h1 className="login-header">Jeau</h1>
+            </div>
+            <div><form onSubmit={handleSubmit}>
+                <div className="login-div login-input-div">
+                    {/* <label>Username: </label> */}
                     <input
+                    className="login-input"
                     type='text'
+                    placeholder="Username"
                     name='username'
                     onChange={handleInputChange} />
                 </div>
-                <div className="login-input">
-                    <label>Password: </label>
+                <div className="login-div login-input-div">
+                    {/* <label>Password: </label> */}
                     <input
+                    className="login-input"
                     type='text'
+                    placeholder="Password"
                     name='password'
                     onChange={handleInputChange} />
                 </div>
-                {incorrectUser ? <p style={{color: 'red', margin: 0}}>Incorrect username or password</p> : null}
-                {accountLocked ? <p style={{color: 'red', margin: 0}}>Account Locked</p> : null}
-                <button type='submit'>Login</button>
-            </form>
-            <nav>
-                <ul>
-                    <li><Link to='/signUp'>Sign Up!</Link></li>
-                    <li><Link to='/home'>Show users!</Link></li>
-                </ul>
-            </nav>
-        </>
+                {incorrectUser ? <p className='login-div' style={{color: '#EE4B2B'}}>Incorrect username or password</p> : null}
+                {accountLockWarning ? <p className='login-div' style={{color: '#EE4B2B'}}>{attemptsLeft} attempts left before 30 minute login timeout</p> : null}
+                {accountLocked ? <p className='login-div' style={{color: '#EE4B2B'}}>Account Locked</p> : null}
+                <div className="login-div">
+                    <button className='login-button' type='submit'>Login</button>
+                </div>
+            </form></div>    
+            <div className="login-div">
+                <nav>
+                    <p>Don't have an account? <Link to='/signUp'>Sign Up!</Link></p>
+                </nav>
+            </div>
+            
+        </div>
     )
 }
 

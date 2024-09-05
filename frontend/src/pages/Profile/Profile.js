@@ -24,7 +24,7 @@ const Profile = () => {
             if(data.self) {
                 setSelf(true);
                 setUser(data.user);
-                console.log(data.user);
+                // console.log(data.user);
             }
             else {
                 setSelf(false);

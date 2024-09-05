@@ -89,7 +89,7 @@ const CreateUser = () => {
     ]
     return (
       <>
-        <h2>Create New User</h2>
+        <h2>Create an account</h2>
         <form onSubmit={handleSubmit}>
           {inputs.map((input, index) => (
             <div className="sign-up-text" key={index}>

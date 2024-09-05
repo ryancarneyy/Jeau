@@ -1,4 +1,50 @@
-.login-input {
-    margin-top: 4px;
-    margin-bottom: 4px;
+/* .login-page {
+   height: 100vh;
+} */
+
+/* Div used for centering objects in the login page */
+.login-div {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
+/* Used for the Title of the login page */
+.login-header-div {
+    height: 35vh; 
+}
+.login-header {
+    font-size: 70px;
+}
+
+/* For username and password fields */
+.login-input-div {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+.login-input {
+    height: 50px;
+    width: 25%;
+    border: 0px;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 16px;
+}
+.login-button {
+    border-radius: 10px;
+    width: 25%;
+    height: 35px;
+    background-color: gray;
+    color:white;
+    border: 0;
+    font-size: 16px;
+}
+.login-button:hover{
+    background-color: lightgray;
+}
+.login-button:active{
+    background-color: gray;
+}
+

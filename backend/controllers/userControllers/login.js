@@ -4,6 +4,7 @@ const promiseQuery = require('../../utils/promiseQuery');
 const getLoginTimeout = require('./getLoginTimeout');
 const addLoginAttempt = require('./addLoginAttempt');
 const setLoginAttempts = require('./setLoginAttempts');
+const getLoginAttempts = require('./getLoginAttempts');
 require('dotenv').config();
 
 // controller function for user logging in
@@ -62,9 +63,12 @@ async function login(user) {
             await setLoginAttempts(username, 0);
             return { success: true, status: 200, message: 'Login Successful', username: userRecord.username, token };
         } else {
-            console.log('Login failed');
+            // console.log('Login failed');
             await addLoginAttempt(username);
-            return { success: false, status: 401, message: 'Authorization Failed' };
+            // to return to user to show how many attempts they have left
+            const loginAttemptsResult = await getLoginAttempts(username);
+            const attemptsLeft = 10 - loginAttemptsResult.numAttempts;
+            return { success: false, status: 401, message: 'Authorization Failed', numAttempts: attemptsLeft};
         }
     } catch (err) {
         // Error handling

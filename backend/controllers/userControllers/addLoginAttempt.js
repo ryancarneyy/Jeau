@@ -19,7 +19,7 @@ async function addLoginAttempt(username) {
         // Checking # of login attempts to see if a timeout needs to be placed
         const getLoginAttempts = "SELECT login_attempts FROM users where username = ?";
         const result = await promiseQuery(getLoginAttempts, [username]);
-        console.log(result[0].login_attempts)
+        // console.log(result[0].login_attempts)
         // set timeout at 10 attempts
         if( result[0].login_attempts >= 10 ) {
             // timeout will be false if timeout has passed or no timeout
