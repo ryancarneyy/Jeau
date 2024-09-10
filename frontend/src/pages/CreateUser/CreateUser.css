@@ -5,9 +5,95 @@
 .password-not-match-text {
     color:red;
 }
+.password-match-div {
+    height: 12px;
+}
+
+.sign-up-page {
+    width: 100%;
+    display: flex;
+}
+
+.display-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: beige;
+    width: 50%;
+    height: 100vh;
+}
+.coffee-cup {
+    height: 100%;
+    object-fit: cover;
+    overflow: hidden;
+    background: linear-gradient(to top, black, transparent);
+}
+.black-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+    z-index: 1;
+}
+.welcome-text {
+    position: absolute;
+    bottom: 0;
+    padding: 40px;
+    padding-bottom: 40px;
+}
+.sign-up-div {
+    width: 50%;
+}
+
+.sign-up-header {
+    font-size: 45px;
+}
 
 
-.sign-up-text {
-    margin-top: 4px;
-    margin-bottom: 4px;
+.input-div {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.long-input {
+    height: 50px;
+    width: 50%;
+    border: 0px;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 16px;
+}
+
+.short-input {
+    height: 50px;
+    width: 23%;
+    border: 0px;
+    border-radius: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 16px;
+}
+
+
+.sign-up-button {
+    border-radius: 10px;
+    width: 50%;
+    height: 35px;
+    background-color: gray;
+    color:white;
+    border: 0;
+    font-size: 16px;
+}
+.sign-up-button:hover{
+    background-color: lightgray;
+}
+.sign-up-button:active{
+    background-color: gray;
 }

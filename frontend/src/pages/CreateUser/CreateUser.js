@@ -1,6 +1,7 @@
 import { useState } from "react";
 import './CreateUser.css'
 import { Link, useNavigate } from "react-router-dom";
+import CoffeeCup from '../../images/CoffeeCup.jpg'
 
 
 const CreateUser = () => {
@@ -16,7 +17,9 @@ const CreateUser = () => {
     date_of_birth: '',
     role: 'user'
   });
+  // Used to turn on the passwordMatch information
   const [passwordMatch, setPasswordMatch] = useState(false);
+  const [fieldTakenMessage, setFieldTakenMessage] = useState(null);
   const navigate = useNavigate();
 
 
@@ -37,7 +40,7 @@ const CreateUser = () => {
 
   // Sets the text for if the passwords match or not
   const passwordMatchText = () => {
-    return passwordMatch ? <p className='sign-up-text password-match-text' >Passwords match!</p> : <p className='sign-up-text password-not-match-text'>Passwords do not match.</p>;
+    return passwordMatch ? <div className="input-div password-match-div"><p className='sign-up-text password-match-text' >Passwords match!</p></div> : <div className="input-div password-match-div"><p className='sign-up-text password-not-match-text'>Passwords do not match.</p></div>;
   }
 
   // hadnles when Create new user button is pressed 
@@ -54,19 +57,29 @@ const CreateUser = () => {
         body: JSON.stringify(newUser)
       })
       .then(res => {
-        if (!res.ok) {
-          throw new Error(`Error adding user: ${res.status}`);
+        // If 409, need to see if username or email is taken to notify user
+        if (!res.ok && res.status !== 409) {
+          throw new Error(`${res.status} | Error adding user: `, res.json());
         }
         return res.json();
       })
       .then(data => {
-        console.log(data.message);
-        alert('User succesfully created!');
-        navigate('/home');
+        if(data.status !== 409) {
+          console.log(data.message);
+          alert('User succesfully created!');
+          navigate('/home');
+        }
+        else {
+          console.log(data.message);
+          setFieldTakenMessage(data.message)
+        }
       })
       .catch( err => {
+        console.log(err)
         console.error('Error with fetch operation:', err);
-        alert('Error while attempting to sign up')
+        if (err.status === 409) {
+          console.log('Error message for duplicate entry')
+        }
       })
     }
     else {
@@ -78,35 +91,71 @@ const CreateUser = () => {
 
   // Inputs needed to make new user
   const inputs = [
-      { label: 'First Name: ', type: 'text', name: 'first_name'},
-      { label: 'Last Name: ', type: 'text', name: 'last_name'},
-      { label: 'Username: ', type: 'text', name: 'username'},
-      { label: 'Password: ', type: 'text', name: 'password'},
-      { label: 'Confirm Password: ', type: 'text', name: 'confirm_password'},
-      { label: 'Date of Birth: ', type: 'date', name: 'date_of_birth'},
-      { label: 'Email: ', type: 'text', name: 'email'},
-      { label: 'Phone Number: ', type: 'text', name: 'phone_number'}
+      { label: 'First Name', inputClass: 'short-input', type: 'text', name: 'first_name'},
+      { label: 'Last Name', inputClass: 'short-input',type: 'text', name: 'last_name'},
+      { label: 'Username', divClass: 'input-div', inputClass: 'long-input', type: 'text', name: 'username'},
+      { label: 'Password', divClass: 'input-div', inputClass: 'long-input', type: 'text', name: 'password'},
+      { label: 'Confirm Password', divClass: 'input-div', inputClass: 'long-input', type: 'text', name: 'confirm_password'},
+      { label: 'Date of Birth: MM/DD/YYYY', divClass: 'input-div', inputClass: 'long-input', type: 'text', name: 'date_of_birth', pattern: "\d{4}-\d{2}-\d{2}"},
+      { label: 'Email', divClass: 'input-div', inputClass: 'long-input', type: 'text', name: 'email'},
+      { label: 'Phone Number', divClass: 'input-div', inputClass: 'long-input', type: 'text', name: 'phone_number'}
     ]
     return (
-      <>
-        <h2>Create an account</h2>
+      <div className="sign-up-page">
+        <div className="display-div">
+          <img className='coffee-cup'src={CoffeeCup}></img>
+          <div className='black-gradient'>
+            <h1 className="welcome-text">
+              <span style={{fontSize: '40px', fontStyle: 'italic'}}>
+                Join the Jeau Club today! 
+              </span>
+              <br></br>
+              Exclusive offers, universal rewards, and a welcoming community are on the horizon.
+            </h1>
+          </div>
+        </div>
+        <div className="sign-up-div">
+        <div className="input-div">
+          <h1 className="sign-up-header">Join the Club!</h1>
+        </div>
+        
         <form onSubmit={handleSubmit}>
-          {inputs.map((input, index) => (
-            <div className="sign-up-text" key={index}>
-              <label>{input.label} </label>
+          <div className='input-div'>
+              {inputs.slice(0,2).map((input, index) => (
+                  <input 
+                    className={input.inputClass}
+                    placeholder={input.label}
+                    type={input.type}
+                    name={input.name}
+                    style={index === 1 ? {marginLeft: '1%'} : {marginRight: '1%'}}
+                    onChange = {handleInputChange}
+                    >
+                  </input>
+              ))}
+          </div>
+          {inputs.slice(2).map((input, index) => (
+            <>
+              <div className={input.divClass} key={index}>
                 <input 
+                  className={input.inputClass}
+                  placeholder={input.label}
                   type={input.type}
                   name={input.name}
                   onChange = {handleInputChange}
+                  pattern = {input.name === 'date_of_birth' ? "\\d{2}/\\d{2}/\\d{4}" : null}
                   >
                 </input>
-              {input.label === 'Confirm Password: ' ? passwordMatchText() : null}
-            </div>
-            
+              </div>
+              {input.name === 'confirm_password' ?  passwordMatchText() : null}
+            </>
+           
           ))}
-          <button type="submit">Create User</button>
+          <div className="input-div">
+            <button className='sign-up-button'type="submit">Create User</button>
+          </div>
         </form>
-      </>
+        </div>
+      </div>
     );
 }
 
