@@ -107,9 +107,9 @@ const Login = () => {
                     name='password'
                     onChange={handleInputChange} />
                 </div>
-                {incorrectUser ? <p className='login-div' style={{color: '#EE4B2B'}}>Incorrect username or password</p> : null}
-                {accountLockWarning ? <p className='login-div' style={{color: '#EE4B2B'}}>{attemptsLeft} attempts left before 30 minute login timeout</p> : null}
-                {accountLocked ? <p className='login-div' style={{color: '#EE4B2B'}}>Account Locked</p> : null}
+                {incorrectUser ? <p className='login-div' style={{color: '#EE4B2B', fontWeight: 'bold'}}>Incorrect username or password</p> : null}
+                {accountLockWarning ? <p className='login-div' style={{color: '#EE4B2B', fontWeight: 'bold'}}>{attemptsLeft} attempts left before 30 minute login timeout</p> : null}
+                {accountLocked ? <p className='login-div' style={{color: '#EE4B2B', fontWeight: 'bold'}}>Account Locked</p> : null}
                 <div className="login-div">
                     <button className='login-button' type='submit'>Login</button>
                 </div>

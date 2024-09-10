@@ -39,8 +39,12 @@ const CreateUser = () => {
   }
 
   // Sets the text for if the passwords match or not
-  const passwordMatchText = () => {
-    return passwordMatch ? <div className="input-div password-match-div"><p className='sign-up-text password-match-text' >Passwords match!</p></div> : <div className="input-div password-match-div"><p className='sign-up-text password-not-match-text'>Passwords do not match.</p></div>;
+  // const passwordMatchText = () => {
+  //   return passwordMatch ? <span className="confirm-password-icon password-match-text">&#10003;</span> : <span className="confirm-password-icon password-not-match-text">&times;</span>
+  // }
+
+  const errorMessageText = () => {
+    return fieldTakenMessage ? <div className="input-div password-match-div"><p className='sign-up-text password-not-match-text'>{fieldTakenMessage}</p></div> : null;
   }
 
   // hadnles when Create new user button is pressed 
@@ -58,20 +62,18 @@ const CreateUser = () => {
       })
       .then(res => {
         // If 409, need to see if username or email is taken to notify user
-        if (!res.ok && res.status !== 409) {
-          throw new Error(`${res.status} | Error adding user: `, res.json());
-        }
+        // if (!res.ok && res.status !== 409) {
+        //   throw new Error(`${res.status} | Error adding user: `, res.json());
+        // }
         return res.json();
       })
       .then(data => {
-        if(data.status !== 409) {
-          console.log(data.message);
-          alert('User succesfully created!');
-          navigate('/home');
+        // console.log(data);
+        if(data.status > 299) {
+          setFieldTakenMessage(data.message)
         }
         else {
-          console.log(data.message);
-          setFieldTakenMessage(data.message)
+          navigate('/home')
         }
       })
       .catch( err => {
@@ -83,7 +85,7 @@ const CreateUser = () => {
       })
     }
     else {
-      alert('Passwords do not match.')
+      setFieldTakenMessage('passwords do not match');
     }
   }
 
@@ -95,7 +97,7 @@ const CreateUser = () => {
       { label: 'Last Name', inputClass: 'short-input',type: 'text', name: 'last_name'},
       { label: 'Username', divClass: 'input-div', inputClass: 'long-input', type: 'text', name: 'username'},
       { label: 'Password', divClass: 'input-div', inputClass: 'long-input', type: 'text', name: 'password'},
-      { label: 'Confirm Password', divClass: 'input-div', inputClass: 'long-input', type: 'text', name: 'confirm_password'},
+      { label: 'Confirm Password', divClass: 'input-div confirm-password-div', inputClass: 'long-input', type: 'text', name: 'confirm_password'},
       { label: 'Date of Birth: MM/DD/YYYY', divClass: 'input-div', inputClass: 'long-input', type: 'text', name: 'date_of_birth', pattern: "\d{4}-\d{2}-\d{2}"},
       { label: 'Email', divClass: 'input-div', inputClass: 'long-input', type: 'text', name: 'email'},
       { label: 'Phone Number', divClass: 'input-div', inputClass: 'long-input', type: 'text', name: 'phone_number'}
@@ -145,14 +147,15 @@ const CreateUser = () => {
                   pattern = {input.name === 'date_of_birth' ? "\\d{2}/\\d{2}/\\d{4}" : null}
                   >
                 </input>
+                {/* {input.name === 'confirm_password' ? passwordMatchText() : null} */}
               </div>
-              {input.name === 'confirm_password' ?  passwordMatchText() : null}
             </>
            
           ))}
           <div className="input-div">
             <button className='sign-up-button'type="submit">Create User</button>
           </div>
+          {errorMessageText()}
         </form>
         </div>
       </div>

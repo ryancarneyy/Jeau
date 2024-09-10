@@ -34,7 +34,7 @@ async function addUser( user ) {
             if(users_dot_index !== -1) {
                 dup_entry = err.message.substring(users_dot_index + users_dot.length, err.message.length - 1);
             }
-            return ( { success: false, status: 409,  message: dup_entry ? dup_entry : "" + ' already taken'} );
+            return ( { success: false, status: 409,  message: dup_entry ? dup_entry + ' already taken': ""} );
         } else if (err.code === 'ER_ACCESS_DENIED_ERROR') {
             return( { success: false, status: 403,  message: 'Forbidden: Access denied' } );
         } 

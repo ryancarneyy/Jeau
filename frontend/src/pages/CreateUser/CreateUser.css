@@ -4,6 +4,7 @@
 }
 .password-not-match-text {
     color:red;
+    font-weight: bold;
 }
 .password-match-div {
     height: 12px;
@@ -64,11 +65,12 @@
 .long-input {
     height: 50px;
     width: 50%;
-    border: 0px;
+    border: 0;
     border-radius: 10px;
     padding-left: 10px;
     padding-right: 10px;
     font-size: 16px;
+
 }
 
 .short-input {
@@ -80,7 +82,7 @@
     padding-right: 10px;
     font-size: 16px;
 }
-
+  
 
 .sign-up-button {
     border-radius: 10px;
