@@ -66,7 +66,8 @@ const Login = () => {
             }
             if (data.token) {
                 console.log('Login successful');
-                navigate(`/profile/${data.username}`);   
+                // navigate(`/profile/${data.username}`);  
+                navigate('/home');
             }
         })
         .catch(err => {

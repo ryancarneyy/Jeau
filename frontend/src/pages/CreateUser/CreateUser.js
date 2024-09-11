@@ -68,7 +68,7 @@ const CreateUser = () => {
         return res.json();
       })
       .then(data => {
-        // console.log(data);
+        // Messages handled in 
         if(data.status > 299) {
           setFieldTakenMessage(data.message)
         }
