@@ -4,7 +4,6 @@ const express = require('express');
 const router = express.Router();
 const addUser = require('../controllers/userControllers/addUser');
 const login = require('../controllers/userControllers/login');
-// const getProfile = require('../controllers/userControllers/getProfile');
 const authenticateToken = require('../utils/authenticateToken');
 
 

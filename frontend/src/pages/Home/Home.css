@@ -1,6 +1,25 @@
+.main-container {
+    display: flex;
+    width: 100%;
+}
+
+.map-text-div {
+    float: left;
+    width: 50%;
+    margin: 50px;
+}
+
+.map-container {
+    border: 2px solid white;
+    padding: 10px;
+    border-radius: 8px;
+
+}
+
 #map {
-    height: 100vh;
-    width: 100vw;
+    border-radius: 8px;
+    height: 500px;
+    width: 100%;
     margin: 0 auto;
     /* margin-top: 50px; */
 }

@@ -15,30 +15,31 @@ L.Icon.Default.mergeOptions({
 });
 
 
-function getCoords(address) {
-    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
+// function getCoords(address) {
+//     const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
 
-    fetch(url)
-    .then(response => response.json())
-    .then(data => {
-        if (data.length > 0) {
-            console.log(data);
-            const data_latitude = data[0].lat;
-            const data_longitude = data[0].lon;
-            // setLatitude(data_latitude);
-            // setLongitude(data_longitude);
-            console.log(`Latitude: ${data_latitude}, Longitude: ${data_longitude}`);
-            return [data_latitude, data_longitude];
-        } else {
-            console.error('Geocoding failed: No results found.');
-        }
-    })
-    .catch(error => console.error('Error:', error));
-} 
+//     fetch(url)
+//     .then(response => response.json())
+//     .then(data => {
+//         if (data.length > 0) {
+//             console.log(data);
+//             const data_latitude = data[0].lat;
+//             const data_longitude = data[0].lon;
+//             // setLatitude(data_latitude);
+//             // setLongitude(data_longitude);
+//             console.log(`Latitude: ${data_latitude}, Longitude: ${data_longitude}`);
+//             return [data_latitude, data_longitude];
+//         } else {
+//             console.error('Geocoding failed: No results found.');
+//         }
+//     })
+//     .catch(error => console.error('Error:', error));
+// } 
 
 
 const Home = () => {
 
+    const [stores, setStores] = useState([]);
     useEffect(() => {
         // let coords = getCoords(address);
         // If the map exists
@@ -59,11 +60,36 @@ const Home = () => {
      
     }, [])
 
+    const getStores = async () => {
+        await fetch('http://localhost:8000/stores/getStores', {
+            method: 'GET'
+        })
+        .then(res => {
+            if(!res.ok) {
+                throw new Error(`Error fetching stores: ${res.status}`);
+            }
+            return res.json();
+        })
+        .then(data => {
+            setStores(data.stores);
+            console.log(data.stores);
+        })
+        .catch(err => {
+            console.error('Error while trying to fetch participating stores');
+        })
+    }
+
 
     return (
-        <>
-           <div id="map"></div>
-        </>
+        <div className="main-container">
+            <div className="map-text-div">
+                <h2>Participating Locations</h2>
+                <div className="map-container">
+                    <div id="map"></div>
+                </div>
+                <button onClick={getStores}>get stores</button>
+            </div>
+        </div>
             
             
     );
