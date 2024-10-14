@@ -10,7 +10,7 @@ const Profile = () => {
     // Multi rendering caused by running App in strictmode (turned off in production)
 
     useEffect(() => {
-        fetch(`http://localhost:8000/users/profile/${username}`, {
+        fetch(`http://localhost:8000/api/users/profile/${username}`, {
             method: 'GET',
             credentials: 'include'
         })

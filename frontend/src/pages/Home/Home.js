@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
+import FetchStores from "../../components/FetchUsers/FetchStores";
 import './Home.css'
-import FetchUsers from "../../components/FetchUsers/FetchUsers";
+// import FetchUsers from "../../components/FetchUsers/FetchUsers";
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css'; 
 import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
@@ -37,9 +38,13 @@ L.Icon.Default.mergeOptions({
 // } 
 
 
+
+
 const Home = () => {
 
     const [stores, setStores] = useState([]);
+
+    // Display Map
     useEffect(() => {
         // let coords = getCoords(address);
         // If the map exists
@@ -60,38 +65,34 @@ const Home = () => {
      
     }, [])
 
-    const getStores = async () => {
-        await fetch('http://localhost:8000/stores/getStores', {
-            method: 'GET'
-        })
-        .then(res => {
-            if(!res.ok) {
-                throw new Error(`Error fetching stores: ${res.status}`);
-            }
-            return res.json();
-        })
-        .then(data => {
-            setStores(data.stores);
-            console.log(data.stores);
-        })
-        .catch(err => {
-            console.error('Error while trying to fetch participating stores');
-        })
-    }
+    useEffect(() => {
+        FetchStores(stores, setStores)
+    }, [])
 
 
     return (
         <div className="main-container">
-            <div className="map-text-div">
+            <div className="map-and-text-div">
                 <h2>Participating Locations</h2>
                 <div className="map-container">
                     <div id="map"></div>
                 </div>
-                <button onClick={getStores}>get stores</button>
             </div>
+            <div className="store-list-container">
+                    <ul> 
+                        {stores.map((store) => (
+                        <div className="store-list-item">
+                            <li key={store.id}> <span style={{fontWeight: 'bold'}}>{store.name}</span> </li>
+                            <ul>
+                                <li>&nbsp;&nbsp;&nbsp; {store.address} </li>
+                                {/* <li>&nbsp;&nbsp;&nbsp;<span style={{fontWeight: 'bold'}}>Email: </span>{store.email}</li>
+                                <li>&nbsp;&nbsp;&nbsp;<span style={{fontWeight: 'bold'}}>Phone Number: </span> {store.phone_number} </li> */}
+                            </ul>
+                        </div>
+                        ))}
+                    </ul>
+                </div>
         </div>
-            
-            
     );
 }
 

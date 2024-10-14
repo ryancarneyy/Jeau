@@ -21,9 +21,9 @@ app.get('/', (req, res) => {
     return res.json("From backend");
 });
 
-app.use('/users', userRoutes);
-app.use('/development', developmentRoutes);
-app.use('/stores', storeRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/development', developmentRoutes);
+app.use('/api/stores', storeRoutes);
 
 
 

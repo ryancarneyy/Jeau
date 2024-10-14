@@ -53,7 +53,7 @@ const CreateUser = () => {
     event.preventDefault();
     if (passwordMatch) {
       console.log('Form submitted with data', newUser)
-      fetch('http://localhost:8000/users/signUp', {
+      fetch('http://localhost:8000/api/users/signUp', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -29,7 +29,7 @@ const Login = () => {
          // keeps form data from being wiped
         event.preventDefault();
         // console.log('Login Attempt with info: ', loginInfo)
-        await fetch('http://localhost:8000/users/login', {
+        await fetch('http://localhost:8000/api/users/login', {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json'

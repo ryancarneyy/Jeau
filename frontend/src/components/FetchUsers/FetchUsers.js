@@ -5,7 +5,7 @@ const FetchUsers = () => {
 
     // Fetch users from database 
     useEffect(() => {
-      fetch('http://localhost:8000/development/getUsers')
+      fetch('http://localhost:8000/api/development/getUsers')
       .then(res => res.json())
       .then(data => {
         console.log(data.users);
