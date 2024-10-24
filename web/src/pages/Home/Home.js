@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import FetchStores from "../../components/FetchUsers/FetchStores";
+import FetchStores from "../../components/FetchStores/FetchStores";
 import './Home.css'
 // import FetchUsers from "../../components/FetchUsers/FetchUsers";
 import L from 'leaflet';
@@ -85,8 +85,6 @@ const Home = () => {
                             <li key={store.id}> <span style={{fontWeight: 'bold'}}>{store.name}</span> </li>
                             <ul>
                                 <li>&nbsp;&nbsp;&nbsp; {store.address} </li>
-                                {/* <li>&nbsp;&nbsp;&nbsp;<span style={{fontWeight: 'bold'}}>Email: </span>{store.email}</li>
-                                <li>&nbsp;&nbsp;&nbsp;<span style={{fontWeight: 'bold'}}>Phone Number: </span> {store.phone_number} </li> */}
                             </ul>
                         </div>
                         ))}

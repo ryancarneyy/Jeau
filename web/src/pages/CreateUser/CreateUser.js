@@ -1,7 +1,9 @@
 import { useState } from "react";
 import './CreateUser.css'
-import { Link, useNavigate } from "react-router-dom";
-import CoffeeCup from '../../images/CoffeeCup.jpg'
+import { useNavigate} from "react-router-dom";
+import CoffeeCup from '../../images/CoffeeCup.jpg';
+import Popup from '../../components/Popup/Popup'
+
 
 
 const CreateUser = () => {
@@ -20,8 +22,15 @@ const CreateUser = () => {
   // Used to turn on the passwordMatch information
   const [passwordMatch, setPasswordMatch] = useState(false);
   const [fieldTakenMessage, setFieldTakenMessage] = useState(null);
+
+  // Used for the popup which happens after a user creation
+  const [popup, setPopup] = useState(false);
   const navigate = useNavigate();
 
+  const closePopup = () => {
+    setPopup(false);
+    navigate('/home')
+  }
 
   // update new user useState
   const handleInputChange = (event) => {
@@ -73,7 +82,8 @@ const CreateUser = () => {
           setFieldTakenMessage(data.message)
         }
         else {
-          navigate('/home')
+          setPopup(true)
+          // navigate('/home')
         }
       })
       .catch( err => {
@@ -98,12 +108,13 @@ const CreateUser = () => {
       { label: 'Username', divClass: 'input-div', inputClass: 'long-input', type: 'text', name: 'username'},
       { label: 'Password', divClass: 'input-div', inputClass: 'long-input', type: 'text', name: 'password'},
       { label: 'Confirm Password', divClass: 'input-div confirm-password-div', inputClass: 'long-input', type: 'text', name: 'confirm_password'},
-      { label: 'Date of Birth: MM/DD/YYYY', divClass: 'input-div', inputClass: 'long-input', type: 'text', name: 'date_of_birth', pattern: "\d{4}-\d{2}-\d{2}"},
+      { label: 'Date of Birth: MM/DD/YYYY', divClass: 'input-div', inputClass: 'long-input', type: 'text', name: 'date_of_birth', pattern: "{4}-{2}-{2}"},
       { label: 'Email', divClass: 'input-div', inputClass: 'long-input', type: 'text', name: 'email'},
       { label: 'Phone Number', divClass: 'input-div', inputClass: 'long-input', type: 'text', name: 'phone_number'}
     ]
     return (
       <div className="sign-up-page">
+        {popup ? <Popup closePopup={closePopup} /> : null }
         <div className="display-div">
           <img className='coffee-cup'src={CoffeeCup}></img>
           <div className='black-gradient'>
